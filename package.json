@@ -1,6 +1,6 @@
 {
   "name": "eip-1193-json-provider",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "publishConfig": {
     "access": "public"
   },
@@ -9,7 +9,7 @@
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "devDependencies": {
-    "eip-1193": "^0.3.1",
+    "eip-1193": "^0.3.2",
     "tsup": "^6.7.0",
     "typescript": "^4.9.5"
   },
