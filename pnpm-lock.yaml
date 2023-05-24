@@ -10,8 +10,8 @@ dependencies:
 
 devDependencies:
   eip-1193:
-    specifier: ^0.2.3
-    version: 0.2.3
+    specifier: ^0.3.1
+    version: 0.3.1
   tsup:
     specifier: ^6.7.0
     version: 6.7.0(typescript@4.9.5)
@@ -347,8 +347,8 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /eip-1193@0.2.3:
-    resolution: {integrity: sha512-3LC3e+f1Tq5uYtDrjc0lmsKIx+Vk9cP+z2XNqwMpkOri+hv237naXzcdqcZp88UOS3Ap+5XXQey/bgXt9YGSSw==}
+  /eip-1193@0.3.1:
+    resolution: {integrity: sha512-q1TcMYAs/tQtZ6Zky57yNPM+iLeznTZ/RAH6zZ3knLJGcibwigAH5mX4Ek9KxS8HkDTqcNlsfu1JWRFIRHyRZg==}
     dev: true
 
   /esbuild@0.17.12:
