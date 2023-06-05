@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-unfetch';
-import {EIP1193Request} from 'eip-1193';
+import {EIP1193ProviderWithoutEvents, EIP1193Request} from 'eip-1193';
+import { EIP1193GenericRequest } from 'eip-1193';
 
 let counter = 0;
 export async function ethereum_request<U extends any, T>(
@@ -57,11 +58,11 @@ export async function ethereum_request<U extends any, T>(
 	}
 }
 
-export class JSONRPCHTTPProvider {
+export class JSONRPCHTTPProvider implements EIP1193ProviderWithoutEvents {
 	supportsETHBatch = true;
 	constructor(protected endpoint: string) {}
 
-	request<T, Request extends EIP1193Request = EIP1193Request>(args: Request): Promise<T> {
-		return ethereum_request<any, T>(this.endpoint, args);
+	request(args: any): Promise<any>{
+		return ethereum_request<any, any>(this.endpoint, args);
 	}
 }
