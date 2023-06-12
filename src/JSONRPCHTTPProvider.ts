@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-unfetch';
-import {EIP1193ProviderWithoutEvents, EIP1193Request} from 'eip-1193';
-import { EIP1193GenericRequest } from 'eip-1193';
+import {EIP1193ProviderWithoutEvents} from 'eip-1193';
 
 let counter = 0;
 export async function ethereum_request<U extends any, T>(
