@@ -1,5 +1,10 @@
 lockfileVersion: '6.0'
 
+patchedDependencies:
+  unfetch@5.0.0:
+    hash: ruiqc3njn2u4fj7dpbogvwbfze
+    path: patches/unfetch@5.0.0.patch
+
 dependencies:
   isomorphic-unfetch:
     specifier: ^4.0.2
@@ -579,7 +584,7 @@ packages:
     resolution: {integrity: sha512-1Yd+CF/7al18/N2BDbsLBcp6RO3tucSW+jcLq24dqdX5MNbCNTw1z4BsGsp4zNmjr/Izm2cs/cEqZPp4kvWSCA==}
     dependencies:
       node-fetch: 3.3.1
-      unfetch: 5.0.0
+      unfetch: 5.0.0(patch_hash=ruiqc3njn2u4fj7dpbogvwbfze)
     dev: false
 
   /joycon@3.1.1:
@@ -898,9 +903,10 @@ packages:
     hasBin: true
     dev: true
 
-  /unfetch@5.0.0:
+  /unfetch@5.0.0(patch_hash=ruiqc3njn2u4fj7dpbogvwbfze):
     resolution: {integrity: sha512-3xM2c89siXg0nHvlmYsQ2zkLASvVMBisZm5lF3gFDqfF2xonNStDJyMpvaOBe0a1Edxmqrf2E0HBdmy9QyZaeg==}
     dev: false
+    patched: true
 
   /web-streams-polyfill@3.2.1:
     resolution: {integrity: sha512-e0MO3wdXWKrLbL0DgGnUV7WHVuw9OUvL4hjgnPkIeEvESk74gAITi5G606JtZPp39cd8HA9VQzCIvA49LpPN5Q==}
