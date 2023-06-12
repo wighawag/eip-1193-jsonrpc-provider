@@ -1,1 +1,1 @@
-we are using isomorphic-unfetch with exact version 4.0.0 due to
+we are using isomorphic-unfetch 3.1.0 because of issue : https://github.com/developit/unfetch/issues/162
