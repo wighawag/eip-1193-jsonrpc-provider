@@ -61,7 +61,8 @@ export class JSONRPCHTTPProvider implements EIP1193ProviderWithoutEvents {
 	supportsETHBatch = true;
 	constructor(protected endpoint: string) {}
 
-	request(args: any): Promise<any>{
-		return ethereum_request<any, any>(this.endpoint, args);
+	request(args: {method: string, params?: any}): Promise<any>;
+	request<T, U extends any = any>(args: {method: string, params: U}): Promise<T>{
+		return ethereum_request<U, T>(this.endpoint, args);
 	}
 }
