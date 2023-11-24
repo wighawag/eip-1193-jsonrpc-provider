@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-unfetch';
 import {EIP1193ProviderWithoutEvents} from 'eip-1193';
 
 let counter = 0;
