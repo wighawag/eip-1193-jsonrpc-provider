@@ -1,4 +1,5 @@
 import {EIP1193ProviderWithoutEvents} from 'eip-1193';
+import PromiseThrottle from 'promise-throttle';
 
 let counter = 0;
 export async function ethereum_request<U extends any, T>(
@@ -58,10 +59,25 @@ export async function ethereum_request<U extends any, T>(
 
 export class JSONRPCHTTPProvider implements EIP1193ProviderWithoutEvents {
 	supportsETHBatch = true;
-	constructor(protected endpoint: string) {}
+	private promiseThrottle: PromiseThrottle | undefined
+	constructor(protected endpoint: string, options?: {requestsPerSecond?: number}) {
+		if (options?.requestsPerSecond) {
+			this.promiseThrottle = new PromiseThrottle({
+				requestsPerSecond: options.requestsPerSecond,
+				promiseImplementation: Promise
+			})
+		}
+		
+	}
 
 	request(args: {method: string, params?: any}): Promise<any>;
 	request<T, U extends any = any>(args: {method: string, params: U}): Promise<T>{
-		return ethereum_request<U, T>(this.endpoint, args);
+
+		if (this.promiseThrottle) {
+			return this.promiseThrottle.add(ethereum_request.bind(null, this.endpoint, args));
+		} else {
+			return ethereum_request<U, T>(this.endpoint, args);
+		}
+		
 	}
 }
