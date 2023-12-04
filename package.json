@@ -1,6 +1,6 @@
 {
-  "name": "eip-1193-json-provider",
-  "version": "0.2.1",
+  "name": "eip-1193-jsonrpc-provider",
+  "version": "0.3.0",
   "publishConfig": {
     "access": "public"
   },
