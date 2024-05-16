@@ -1,1 +1,1 @@
-# eip-1193-json-provider
+# eip-1193-jsonrpc-provider

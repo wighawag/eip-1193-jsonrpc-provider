@@ -1,10 +1,20 @@
 import {EIP1193ProviderWithoutEvents} from 'eip-1193';
 import PromiseThrottle from 'promise-throttle';
 
+export class JSONRPCError extends Error {
+	public readonly isInvalidError = true;
+	constructor(
+		message: string,
+		public cause: Error,
+	) {
+		super(message);
+	}
+}
+
 let counter = 0;
 export async function ethereum_request<U extends any, T>(
 	endpoint: string,
-	req: {method: string; params?: U}
+	req: {method: string; params?: U},
 ): Promise<T> {
 	const {method, params} = req;
 	// NOTE: special case to allow batch request via EIP-1193
@@ -21,22 +31,45 @@ export async function ethereum_request<U extends any, T>(
 				params: param.params,
 			});
 		}
-		const response = await fetch(endpoint, {
-			method: 'POST',
-			headers: {'Content-Type': 'application/json'},
-			body: JSON.stringify(requests),
-		});
 
-		const jsonArray = (await response.json()) as {result?: T; error?: any}[];
+		let response: Response;
+		try {
+			response = await fetch(endpoint, {
+				method: 'POST',
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify(requests),
+			});
+		} catch (fetchError) {
+			throw new JSONRPCError('Failed To Fetch', fetchError);
+		}
+
+		if (response.status != 200) {
+			throw new JSONRPCError('Failed To Fetch', new Error(`status: ${response.status}`));
+		}
+
+		let jsonArray: {result?: T; error?: any}[];
+		try {
+			jsonArray = await response.json();
+		} catch (parsingError) {
+			throw new JSONRPCError('Failed To parse json', parsingError);
+		}
+
+		let hasError = false;
 		for (const response of jsonArray) {
 			if (response.error || !response.result) {
-				throw response.error || {code: 5000, message: 'No Result'};
+				hasError = true;
 			}
 		}
+
+		if (hasError) {
+			throw jsonArray;
+		}
+
 		return jsonArray.map((v) => v.result) as unknown as T;
 	}
+	let response: Response;
 	try {
-		const response = await fetch(endpoint, {
+		response = await fetch(endpoint, {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({
@@ -46,38 +79,47 @@ export async function ethereum_request<U extends any, T>(
 				params,
 			}),
 		});
-		const json: {result?: T; error?: any} = await response.json();
-		if (json.error || !json.result) {
-			throw json.error || {code: 5000, message: 'No Result'};
-		}
-		return json.result;
-	} catch (err) {
-		// console.log(`FETCH error`, err);
-		throw err;
+	} catch (fetchError) {
+		throw new JSONRPCError('Failed To Fetch', fetchError);
 	}
+
+	if (response.status != 200) {
+		throw new JSONRPCError('Failed To Fetch', new Error(`status: ${response.status}`));
+	}
+	let json: {result?: T; error?: any};
+	try {
+		json = await response.json();
+	} catch (parsingError) {
+		throw new JSONRPCError('Failed To parse json', parsingError);
+	}
+
+	if (json.error || !json.result) {
+		throw json.error || {code: 5000, message: 'No Result'};
+	}
+	return json.result;
 }
 
 export class JSONRPCHTTPProvider implements EIP1193ProviderWithoutEvents {
 	supportsETHBatch = true;
-	private promiseThrottle: PromiseThrottle | undefined
-	constructor(protected endpoint: string, options?: {requestsPerSecond?: number}) {
+	private promiseThrottle: PromiseThrottle | undefined;
+	constructor(
+		protected endpoint: string,
+		options?: {requestsPerSecond?: number},
+	) {
 		if (options?.requestsPerSecond) {
 			this.promiseThrottle = new PromiseThrottle({
 				requestsPerSecond: options.requestsPerSecond,
-				promiseImplementation: Promise
-			})
+				promiseImplementation: Promise,
+			});
 		}
-		
 	}
 
-	request(args: {method: string, params?: any}): Promise<any>;
-	request<T, U extends any = any>(args: {method: string, params: U}): Promise<T>{
-
+	request(args: {method: string; params?: any}): Promise<any>;
+	request<T, U extends any = any>(args: {method: string; params: U}): Promise<T> {
 		if (this.promiseThrottle) {
 			return this.promiseThrottle.add(ethereum_request.bind(null, this.endpoint, args));
 		} else {
 			return ethereum_request<U, T>(this.endpoint, args);
 		}
-		
 	}
 }
