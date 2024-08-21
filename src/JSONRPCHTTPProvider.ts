@@ -40,18 +40,21 @@ export async function ethereum_request<U extends any, T>(
 				body: JSON.stringify(requests),
 			});
 		} catch (fetchError) {
-			throw new JSONRPCError('Failed To Fetch', fetchError);
+			throw new JSONRPCError(`Failed To Batch Fetch at ${endpoint}`, fetchError);
 		}
 
 		if (response.status != 200) {
-			throw new JSONRPCError('Failed To Fetch', new Error(`status: ${response.status}`));
+			throw new JSONRPCError(
+				`Failed To Batch Fetch (Status = ${response.status}) at ${endpoint}`,
+				new Error(`status: ${response.status}`),
+			);
 		}
 
 		let jsonArray: {result?: T; error?: any}[];
 		try {
 			jsonArray = await response.json();
 		} catch (parsingError) {
-			throw new JSONRPCError('Failed To parse json', parsingError);
+			throw new JSONRPCError('Failed To Batch parse response as json', parsingError);
 		}
 
 		let hasError = false;
@@ -80,17 +83,20 @@ export async function ethereum_request<U extends any, T>(
 			}),
 		});
 	} catch (fetchError) {
-		throw new JSONRPCError('Failed To Fetch', fetchError);
+		throw new JSONRPCError(`Failed To Fetch at ${endpoint}`, fetchError);
 	}
 
 	if (response.status != 200) {
-		throw new JSONRPCError('Failed To Fetch', new Error(`status: ${response.status}`));
+		throw new JSONRPCError(
+			`Failed To Fetch (status = ${response.status}) at ${endpoint}`,
+			new Error(`status: ${response.status}`),
+		);
 	}
 	let json: {result?: T; error?: any};
 	try {
 		json = await response.json();
 	} catch (parsingError) {
-		throw new JSONRPCError('Failed To parse json', parsingError);
+		throw new JSONRPCError('Failed To parse response json', parsingError);
 	}
 
 	if (json.error || !json.result) {
