@@ -83,12 +83,12 @@ export async function ethereum_request<U extends any, T>(
 			}),
 		});
 	} catch (fetchError) {
-		throw new JSONRPCError(`Failed To Fetch at ${endpoint}`, fetchError);
+		throw new JSONRPCError(`Failed To Fetch at ${endpoint} (method: ${method})`, fetchError);
 	}
 
 	if (response.status != 200) {
 		throw new JSONRPCError(
-			`Failed To Fetch (status = ${response.status}) at ${endpoint}`,
+			`Failed To Fetch (status = ${response.status}) at ${endpoint} (method: ${method})`,
 			new Error(`status: ${response.status}`),
 		);
 	}
