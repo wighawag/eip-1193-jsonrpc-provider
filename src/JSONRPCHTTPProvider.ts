@@ -28,7 +28,7 @@ export async function ethereum_request<U extends any, T>(
 				id: ++counter,
 				jsonrpc: '2.0',
 				method: param.method,
-				params: param.params,
+				params: param.params || [],
 			});
 		}
 
@@ -79,7 +79,7 @@ export async function ethereum_request<U extends any, T>(
 				id: ++counter,
 				jsonrpc: '2.0',
 				method,
-				params,
+				params: params || [],
 			}),
 		});
 	} catch (fetchError) {
