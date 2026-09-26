@@ -1,9 +1,28 @@
 {
   "name": "eip-1193-jsonrpc-provider",
   "version": "0.4.3",
+  "keywords": [
+    "eip-1193",
+    "ethereum",
+    "provider",
+    "json-rpc",
+    "http",
+    "batch",
+    "throttle"
+  ],
+  "author": "wighawag <wighawag@gmail.com>",
+  "homepage": "https://github.com/wighawag/eip-1193-jsonrpc-provider#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wighawag/eip-1193-jsonrpc-provider.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wighawag/eip-1193-jsonrpc-provider/issues"
+  },
   "publishConfig": {
     "access": "public"
   },
+  "license": "MIT",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
