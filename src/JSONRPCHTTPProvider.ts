@@ -1,4 +1,4 @@
-import {EIP1193ProviderWithoutEvents} from 'eip-1193';
+import type {EIP1193HttpNodeProvider} from 'eip-1193';
 import PromiseThrottle from 'promise-throttle';
 
 export class JSONRPCError extends Error {
@@ -105,7 +105,7 @@ export async function ethereum_request<U extends any, T>(
 	return json.result;
 }
 
-export class JSONRPCHTTPProvider implements EIP1193ProviderWithoutEvents {
+export class JSONRPCHTTPProvider implements EIP1193HttpNodeProvider {
 	supportsETHBatch = true;
 	private promiseThrottle: PromiseThrottle | undefined;
 	constructor(
