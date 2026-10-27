@@ -59,7 +59,9 @@ export async function ethereum_request<U extends any, T>(
 
 		let hasError = false;
 		for (const response of jsonArray) {
-			if (response.error || !response.result) {
+			// `null`, `false` and `0` are valid results (a pending receipt, `eth_syncing`,
+			//  `hardhat_impersonateAccount`): only an error, or a missing `result` member, is a failure.
+			if (response.error || !('result' in response)) {
 				hasError = true;
 			}
 		}
@@ -99,10 +101,17 @@ export async function ethereum_request<U extends any, T>(
 		throw new JSONRPCError('Failed To parse response json', parsingError);
 	}
 
-	if (json.error || !json.result) {
-		throw json.error || {code: 5000, message: 'No Result'};
+	if (json.error) {
+		throw json.error;
 	}
-	return json.result;
+	// A JSON-RPC response carries EITHER `error` OR `result`, and `result` may legitimately be
+	//  `null` or `false` (a pending `eth_getTransactionReceipt`, `eth_syncing`, and
+	//  `hardhat_impersonateAccount`, which anvil and hardhat answer with `null`). Only a response
+	//  with neither member is malformed.
+	if (!('result' in json)) {
+		throw {code: 5000, message: 'No Result'};
+	}
+	return json.result as T;
 }
 
 export class JSONRPCHTTPProvider implements EIP1193HttpNodeProvider {
