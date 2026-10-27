@@ -61,7 +61,8 @@
     "build": "pkgroll",
     "dev": "pkgroll --watch",
     "format:check": "prettier --check .",
+    "test": "pnpm build && node --test test/*.test.mjs",
     "format": "prettier --write .",
-    "release:ci": "pnpm format:check && pnpm build && pnpm changeset publish"
+    "release:ci": "pnpm format:check && pnpm test && pnpm changeset publish"
   }
 }
