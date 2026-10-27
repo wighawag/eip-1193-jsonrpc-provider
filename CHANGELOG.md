@@ -1,5 +1,11 @@
 # @eip-1193/jsonrpc-provider
 
+## 0.6.1
+
+### Patch Changes
+
+- 7a41cff: Package metadata: a description.
+
 ## 0.6.0
 
 ### Minor Changes

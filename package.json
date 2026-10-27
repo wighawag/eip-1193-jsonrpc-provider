@@ -1,6 +1,6 @@
 {
   "name": "@eip-1193/jsonrpc-provider",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "An EIP-1193 provider backed by a JSON-RPC node over HTTP, with optional request throttling and eth_batch support",
   "keywords": [
     "eip-1193",
